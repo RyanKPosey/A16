@@ -8,8 +8,8 @@ using namespace std;
 template <class Type>
 class orderedLinkedList: public linkedListType<Type>
 {
-	using linkedListType<Type>::first;
-	using linkedListType<Type>::last;
+    using linkedListType<Type>::head;
+    using linkedListType<Type>::tail;
 	using linkedListType<Type>::count;
 	
 	public:
@@ -20,7 +20,7 @@ class orderedLinkedList: public linkedListType<Type>
 
 		void insert(const Type& newItem);
 		  //Function to insert newItem in the list.
-		  //Postcondition: first points to the new list, newItem 
+          //Postcondition: head points to the new list, newItem 
 		  //               is inserted at the proper place in the
 		  //               list, and count is incremented by 1.
 
@@ -29,7 +29,7 @@ class orderedLinkedList: public linkedListType<Type>
 		  //Because the resulting list must be sorted, newItem is 
 		  //inserted at the proper in the list.
 		  //This function uses the function insert to insert newItem.
-		  //Postcondition: first points to the new list, newItem is
+          //Postcondition: head points to the new list, newItem is
 		  //               inserted at the proper in the list,
 		  //               and count is incremented by 1.
 
@@ -38,7 +38,7 @@ class orderedLinkedList: public linkedListType<Type>
 		  //Because the resulting list must be sorted, newItem is 
 		  //inserted at the proper in the list.
 		  //This function uses the function insert to insert newItem.
-		  //Postcondition: first points to the new list, newItem is
+          //Postcondition: head points to the new list, newItem is
 		  //               inserted at the proper in the list,
 		  //               and count is incremented by 1.
 
@@ -46,7 +46,7 @@ class orderedLinkedList: public linkedListType<Type>
 		  //Function to delete deleteItem from the list.
 		  //Postcondition: If found, the node containing 
 		  //               deleteItem is deleted from the list;
-		  //               first points to the first node of the 
+          //               head points to the first node of the 
 		  //               new list, and count is decremented by 1.
 		  //               If deleteItem is not in the list, an
 		  //               appropriate message is printed.
@@ -60,16 +60,16 @@ bool orderedLinkedList<Type>::
     bool found = false;
     nodeType<Type> *current; //pointer to traverse the list
 
-    current = first;  //start the search at the first node
+    current = head;  //start the search at the first node
 
     while (current != nullptr && !found)
-        if (current->info >= searchItem)
+        if (current->data >= searchItem)
             found = true;
         else
-            current = current->link;
+            current = current->next;
  
     if (found)
-       found = (current->info == searchItem); //test for equality
+       found = (current->data == searchItem); //test for equality
 
     return found;
 }//end search
@@ -86,43 +86,43 @@ void orderedLinkedList<Type>::insert(const Type& newItem)
     bool  found;
 
     newNode = new nodeType<Type>; //create the node
-    newNode->info = newItem;  //store newItem in the node
-    newNode->link = nullptr;  //set the link field of the node
+    newNode->data = newItem;  //store newItem in the node
+    newNode->next = nullptr;  //set the next field of the node
                               //to nullptr
 
-    if (first == nullptr)  //Case 1
+    if (head == nullptr)  //Case 1
     {
-        first = newNode;
-        last = newNode;
+        head = newNode;
+        tail = newNode;
         count++;
     }
     else
     {
-        current = first;
+        current = head;
         found = false;
 
         while (current != nullptr && !found) //search the list
-           if (current->info >= newItem)
+           if (current->data >= newItem)
                found = true;
            else
            {
                trailCurrent = current;
-               current = current->link;
+               current = current->next;
            }
  
-        if (current == first)      //Case 2
+        if (current == head)      //Case 2
         {
-            newNode->link = first;
-            first = newNode;
+            newNode->next = head;
+            head = newNode;
             count++;
         }
         else                       //Case 3
         {
-            trailCurrent->link = newNode;
-            newNode->link = current;
+            trailCurrent->next = newNode;
+            newNode->next = current;
 
             if (current == nullptr)
-                last = newNode;
+                tail = newNode;
 
             count++;
         }
@@ -149,44 +149,44 @@ void orderedLinkedList<Type>::deleteNode(const Type& deleteItem)
                                             //before current
     bool found;
 
-    if (first == nullptr) //Case 1
+    if (head == nullptr) //Case 1
         cout << "Cannot delete from an empty list." << endl;
     else
     {
-        current = first;
+        current = head;
         found = false;
 
         while (current != nullptr && !found)  //search the list
-            if (current->info >= deleteItem)
+            if (current->data >= deleteItem)
                 found = true;
             else
             {
                 trailCurrent = current;
-                current = current->link;
+                current = current->next;
             }
 
         if (current == nullptr)   //Case 4
             cout << "The item to be deleted is not in the " 
                  << "list." << endl;
         else
-            if (current->info == deleteItem) //the item to be 
+            if (current->data == deleteItem) //the item to be 
                                    //deleted is in the list
             {
-                if (first == current)       //Case 2
+                if (head == current)       //Case 2
                 {
-                    first = first->link;
+                    head = head->next;
 
-                    if (first == nullptr)
-                        last = nullptr;
+                    if (head == nullptr)
+                        tail = nullptr;
 
                     delete current;
                 }
                 else                         //Case 3
                 {
-                    trailCurrent->link = current->link;
+                    trailCurrent->next = current->next;
 
-                    if (current == last)
-                        last = trailCurrent;
+                    if (current == tail)
+                        tail = trailCurrent;
 
                     delete current;
                 }
